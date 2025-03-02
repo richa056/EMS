@@ -1,0 +1,163 @@
+#include <iostream> 
+#include <vector> 
+#include <string> 
+#include <map> 
+using namespace std; 
+// Participant structure 
+struct Participant { 
+    string name; 
+    string email; 
+    string paymentMethod; // New field for payment method 
+    string registrationNumber; // New field for registration number 
+}; 
+ 
+// Event structure 
+struct Event { 
+    string name; 
+    string date; 
+    string time; 
+    string venue; 
+    string program; 
+    vector<Participant> participants; 
+}; 
+ 
+// Function to register for an event 
+void registerEvent(vector<Event>& events) { 
+    char addMore; 
+    do { 
+        Event newEvent; 
+        cout << "Enter event name: "; 
+        cin.ignore(); 
+        getline(cin, newEvent.name); 
+         
+        // Define a map to store event details 
+        map<string, tuple<string, string, string>> eventDetails = { 
+            {"Dance Competition", {"10/04/2024", "09:00AM-12:00PM", "Cultural Hall"}}, 
+            {"Band Music", {"10/04/2024", "10:00AM-01:00PM", "Cultural Hall"}}, 
+            {"Hackathon", {"12/04/2024", "09:00AM-12:00PM", "Tech Park"}}, 
+            {"C++ Workshop", {"12/04/2024", "10:00AM-02:00PM", "Tech Park"}}, 
+            {"Football", {"15/04/2024", "11:00AM-02:00PM", "Sports Ground"}}, 
+            {"Basketball", {"15/04/2024", "08:00AM-12:00PM", "Sports Ground"}}, 
+            {"Swimming", {"15/04/2024", "09:00AM-01:00PM", "Sports Ground"}}, 
+            {"Concert", {"16/04/2024", "04:00PM-09:00PM", "Audi Ground"}}, 
+            {"Open Mic", {"16/04/2024", "01:00PM-03:00PM", "Audi Ground"}} 
+        }; 
+ 
+        // Look up event details from the map 
+        auto it = eventDetails.find(newEvent.name); 
+        if (it != eventDetails.end()) { 
+            newEvent.date = get<0>(it->second); 
+            newEvent.time = get<1>(it->second); 
+            newEvent.venue = get<2>(it->second); 
+        } else { 
+            cout << "Event details not found." << endl; 
+            continue; 
+        } 
+ 
+        // Participant registration 
+        char addParticipant; 
+        do { 
+            Participant participant; 
+            cout << "Enter participant name: "; 
+            getline(cin, participant.name); 
+            cout << "Enter participant email: "; 
+            getline(cin, participant.email); 
+            cout << "Enter payment method (UPI/GPAY/NETBANKING/CASH): "; 
+            getline(cin, participant.paymentMethod); 
+            cout << "Enter registration number: "; 
+            getline(cin, participant.registrationNumber); 
+            newEvent.participants.push_back(participant); 
+            cout << "Participant registered successfully!" << endl; 
+            cout << "Add another participant? (Y/N): "; 
+            cin >> addParticipant; 
+            cin.ignore(); 
+        } while (addParticipant == 'Y' || addParticipant == 'y'); 
+ 
+        events.push_back(newEvent); 
+        cout << "Event registered successfully!" << endl; 
+        cout << "Do you want to add another event? (Y/N): "; 
+        cin >> addMore; 
+    } while (addMore == 'Y' || addMore == 'y'); 
+} 
+ 
+// Function to display all events 
+void displayEvents(const vector<Event>& events) { 
+    if (events.empty()) { 
+        cout << "No events registered yet." << endl; 
+        return; 
+    } 
+    cout << "Registered Events:" << endl; 
+    for (const Event& event : events) { 
+        cout << "Name: " << event.name << endl; 
+        cout << "Date: " << event.date << endl; 
+        cout << "Time: " << event.time << endl; 
+        cout << "Venue: " << event.venue << endl; 
+        cout << "Program: " << event.program << endl; 
+        cout << "Participants:" << endl; 
+        for (const Participant& participant : event.participants) { 
+            cout << "- Name: " << participant.name << ", Email: " << participant.email 
+<< ", Payment Method: " << participant.paymentMethod << ", Registration Number: " << 
+participant.registrationNumber << endl; 
+        } 
+        cout << endl; 
+    } 
+} 
+ 
+void makePayment() { 
+    cout << "Choose payment method:" << endl; 
+    cout << "1. UPI" << endl; 
+    cout << "2. GPAY" << endl; 
+    cout << "3. NETBANKING" << endl; 
+    cout << "4. CASH" << endl; 
+    int choice; 
+    cin >> choice; 
+    // Implement payment logic based on choice 
+} 
+ 
+int main() { 
+    vector<Event> events; 
+    int choice; 
+     
+    do { 
+        cout << "Event Management System" << endl; 
+        cout << "1. List of Events" << endl; 
+        cout << "2. Register for an event" << endl; 
+        cout << "3. Display all events" << endl; 
+        cout << "4. Make Payment" << endl; 
+        cout << "5. Exit" << endl; 
+        cout << "Enter your choice: "; 
+        cin >> choice; 
+         
+        switch(choice) { 
+            case 1: { 
+                cout << "LIST OF EVENTS:" << endl; 
+                cout << "1. Dance Competition" << endl; 
+                cout << "2. Band Music" << endl; 
+                cout << "3. Hackathon" << endl; 
+                cout << "4. C++ Workshop" << endl; 
+                cout << "5. Football" << endl; 
+                cout << "6. Basketball" << endl; 
+                cout << "7. Swimming" << endl; 
+                cout << "8. Concert" << endl; 
+                cout << "9. Open Mic" << endl; 
+                break; 
+            } 
+            case 2: { 
+                registerEvent(events); 
+                break; 
+            } 
+            case 3: 
+                displayEvents(events); 
+                break; 
+            case 4: 
+                makePayment(); 
+break; 
+case 5: 
+cout << "Exiting program." << endl; 
+break; 
+default: 
+cout << "Invalid choice. Please try again." << endl; 
+break; 
+} 
+} while (choice != 5); 
+return 0;
